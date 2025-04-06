@@ -1,3 +1,5 @@
+# agenda.py
+
 class Contato:
     def __init__(self, nome, telefone):
         self.nome = nome
@@ -14,10 +16,7 @@ class AgendaTelefonica:
         return self.contatos
 
     def buscar_contato(self, nome):
-        # Ordena os contatos antes de fazer a busca binária
         contatos_ordenados = sorted(self.contatos, key=lambda c: c.nome.lower())
-
-        # Implementação de busca binária
         inicio = 0
         fim = len(contatos_ordenados) - 1
 
