@@ -20,13 +20,6 @@ class AgendaTelefonica:
         novo_contato = Contato(nome, telefone)
         self.tabela_hash[indice].append(novo_contato)
 
-    def buscar_contato_hash(self, nome):
-        indice = self._hash(nome)
-        for contato in self.tabela_hash[indice]:
-            if contato.nome == nome:
-                return contato
-        return None
-
     def listar_todos_contatos(self):
         contatos = []
         for bucket in self.tabela_hash:
@@ -57,31 +50,47 @@ def busca_binaria(contatos_ordenados, nome_busca):
     return None
 
 
-# Exemplo de uso
+# Exemplo de interação no terminal
 if __name__ == "__main__":
     agenda = AgendaTelefonica()
 
-    # Adicionando contatos
-    agenda.adicionar_contato("João", "12345")
-    agenda.adicionar_contato("Maria", "67890")
-    agenda.adicionar_contato("Ana", "11111")
-    agenda.adicionar_contato("Carlos", "22222")
+    while True:
+        print("\n--- Agenda Telefônica ---")
+        print("1. Adicionar contato")
+        print("2. Buscar contato")
+        print("3. Listar todos os contatos")
+        print("4. Sair")
 
-    # Listando e ordenando
-    todos_contatos = agenda.listar_todos_contatos()
-    contatos_ordenados = ordenar_contatos_por_nome(todos_contatos)
+        escolha = input("Escolha uma opção: ")
 
-    # Exibindo contatos ordenados
-    print("Contatos ordenados:")
-    for contato in contatos_ordenados:
-        print(contato)
+        if escolha == "1":
+            nome = input("Digite o nome do contato: ")
+            telefone = input("Digite o telefone do contato: ")
+            agenda.adicionar_contato(nome, telefone)
+            print(f"Contato de {nome} adicionado com sucesso!")
 
-    # Busca binária
-    nome_procurado = "Maria"
-    resultado = busca_binaria(contatos_ordenados, nome_procurado)
+        elif escolha == "2":
+            nome_busca = input("Digite o nome do contato a ser buscado: ")
+            todos_contatos = agenda.listar_todos_contatos()
+            contatos_ordenados = ordenar_contatos_por_nome(todos_contatos)
+            resultado = busca_binaria(contatos_ordenados, nome_busca)
 
-    if resultado:
-        print(f"\nContato encontrado: {resultado.nome} - {resultado.telefone}")
-    else:
-        print(f"\nContato '{nome_procurado}' não encontrado.")
+            if resultado:
+                print(f"Contato encontrado: {resultado.nome} - {resultado.telefone}")
+            else:
+                print(f"Contato '{nome_busca}' não encontrado.")
+
+        elif escolha == "3":
+            todos_contatos = agenda.listar_todos_contatos()
+            contatos_ordenados = ordenar_contatos_por_nome(todos_contatos)
+            print("\nContatos na agenda:")
+            for contato in contatos_ordenados:
+                print(contato)
+
+        elif escolha == "4":
+            print("Saindo da agenda...")
+            break
+
+        else:
+            print("Opção inválida. Tente novamente.")
 
