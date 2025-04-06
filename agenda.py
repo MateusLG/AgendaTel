@@ -10,7 +10,12 @@ class AgendaTelefonica:
         self.contatos = []
 
     def adicionar_contato(self, nome, telefone):
+        # Verifica se o nome ou telefone já existem
+        for contato in self.contatos:
+            if contato.nome.lower() == nome.lower() or contato.telefone == telefone:
+                return False  # Duplicado
         self.contatos.append(Contato(nome, telefone))
+        return True  # Adicionado com sucesso
 
     def listar_todos_contatos(self):
         return self.contatos
@@ -32,4 +37,11 @@ class AgendaTelefonica:
                 fim = meio - 1
 
         return None
+
+    def remover_contato(self, nome):
+        for contato in self.contatos:
+            if contato.nome.lower() == nome.lower():
+                self.contatos.remove(contato)
+                return True
+        return False
 

@@ -37,16 +37,22 @@ class AgendaApp:
         self.busca_button = tk.Button(root, text="Buscar", command=self.buscar_contato)
         self.busca_button.grid(row=6, column=0, columnspan=2)
 
+        self.remover_button = tk.Button(root, text="Remover Contato Selecionado", command=self.remover_contato_selecionado)
+        self.remover_button.grid(row=7, column=0, columnspan=2)
+
         self.atualizar_lista()
 
     def adicionar_contato(self):
         nome = self.nome_entry.get()
         telefone = self.telefone_entry.get()
         if nome and telefone:
-            self.agenda.adicionar_contato(nome, telefone)
-            self.nome_entry.delete(0, tk.END)
-            self.telefone_entry.delete(0, tk.END)
-            self.atualizar_lista()
+            sucesso = self.agenda.adicionar_contato(nome, telefone)
+            if sucesso:
+                self.nome_entry.delete(0, tk.END)
+                self.telefone_entry.delete(0, tk.END)
+                self.atualizar_lista()
+            else:
+                messagebox.showerror("Contato Duplicado", "Nome ou telefone já existe na agenda.")
         else:
             messagebox.showwarning("Campos Inválidos", "Por favor, preencha todos os campos.")
 
@@ -60,6 +66,24 @@ class AgendaApp:
                 messagebox.showwarning("Não Encontrado", f"{nome} não foi encontrado na agenda.")
         else:
             messagebox.showwarning("Campo Vazio", "Digite um nome para buscar.")
+
+    def remover_contato_selecionado(self):
+        selecionado = self.lista_contatos.curselection()
+        if not selecionado:
+            messagebox.showwarning("Nenhum selecionado", "Selecione um contato da lista para remover.")
+            return
+
+        contato_str = self.lista_contatos.get(selecionado[0])
+        nome = contato_str.split(" - ")[0]
+
+        confirmado = messagebox.askyesno("Confirmar Remoção", f"Deseja remover {nome}?")
+        if confirmado:
+            sucesso = self.agenda.remover_contato(nome)
+            if sucesso:
+                self.atualizar_lista()
+                messagebox.showinfo("Removido", f"{nome} foi removido com sucesso.")
+            else:
+                messagebox.showerror("Erro", "Contato não encontrado para remoção.")
 
     def atualizar_lista(self):
         self.lista_contatos.delete(0, tk.END)
